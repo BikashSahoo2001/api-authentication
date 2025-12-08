@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class CartController extends Controller
 {
@@ -14,9 +15,10 @@ class CartController extends Controller
             'quantity'   => 'required|integer|min:1',
         ]);
 
-        $user = $request->user(); // authenticated user from Sanctum
+        // ✅ JWT authenticated user
+        $user = JWTAuth::parseToken()->authenticate();
 
-        DB::table('carts')->insert([
+        DB::table('cart_items')->insert([
             'user_id'    => $user->id,
             'product_id' => $request->product_id,
             'quantity'   => $request->quantity,
